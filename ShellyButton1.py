@@ -27,16 +27,12 @@ class ShellyButton1:
         self.url3 = url3
         self.url4 = url4
 
-    def create_url(self, endpoint, params=None):
-        url = f'{BASE_URL}{IP_ADDRESS}{endpoint}'
-        if params:
-            param_string = "&".join([f"{key}={value}" for key, value in params.items()])
-            url = f"{url}?{param_string}"
+    def create_url(self, endpoint, kickoff=False, params=None):
+        if kickoff:
+            url = f'{BASE_URL}{DEFAULT_IP_ADDRESS}{endpoint}'
+        else:
+            url = f'{BASE_URL}{IP_ADDRESS}{endpoint}'
 
-        return url
-
-    def create_url_kickoff(self, endpoint, params=None):
-        url = f'{BASE_URL}{DEFAULT_IP_ADDRESS}{endpoint}'
         if params:
             param_string = "&".join([f"{key}={value}" for key, value in params.items()])
             url = f"{url}?{param_string}"
@@ -122,7 +118,10 @@ class ShellyButton1:
             "dns": dns
         }
         try:
-            response = requests.get(self.create_url(END_POINTS["wifi"], params=params))
+            if kickoff:
+                response = requests.get(self.create_url(END_POINTS["wifi"], True, params=params))
+            else:
+                response = requests.get(self.create_url(END_POINTS["wifi"], params=params))
         except Exception as e:
             print("set_wifi_client_mode API error:", datetime.now().strftime("%m/%d/%Y, %H:%M:%S"))
             return {"error": True, "message": e}
