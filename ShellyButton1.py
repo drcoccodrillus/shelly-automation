@@ -95,10 +95,7 @@ class ShellyButton1:
             "dns": dns
         }
         try:
-            if kickoff:
-                response = requests.get(self.create_url(END_POINTS["wifi"], True, params=params))
-            else:
-                response = requests.get(self.create_url(END_POINTS["wifi"], params=params))
+            response = requests.get(self.create_url(END_POINTS["wifi"], kickoff, params=params))
         except Exception as e:
             print("set_wifi_client_mode API error:", datetime.now().strftime("%m/%d/%Y, %H:%M:%S"))
             return {"error": True, "message": e}
