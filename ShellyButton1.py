@@ -83,29 +83,6 @@ class ShellyButton1:
 
         return False
 
-    def kickoff_wifi_client_mode(self, ssid, key, ipv4_method, ip, netmask, gateway, dns):
-        params = {
-            "enabled": "1",
-            "ssid": ssid,
-            "key": key,
-            "ipv4_method": ipv4_method,
-            "ip": ip,
-            "netmask": netmask,
-            "gateway": gateway,
-            "dns": dns
-        }
-        try:
-            response = requests.get(self.create_url_kickoff(END_POINTS["wifi"], params=params))
-        except Exception as e:
-            print("set_wifi_client_mode API error:", datetime.now().strftime("%m/%d/%Y, %H:%M:%S"))
-            return {"error": True, "message": e}
-
-        if response.status_code == 200:
-            json_object = json.loads(response.text)
-            return json.dumps(json_object, indent=2)
-
-        return False
-
     def set_wifi_client_mode(self, ssid, key, ipv4_method, ip, netmask, gateway, dns, kickoff=False):
         params = {
             "enabled": "1",
