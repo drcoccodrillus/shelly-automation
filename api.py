@@ -5,6 +5,21 @@ from ShellyButton1 import ShellyButton1
 app = Flask(__name__)
 shelly = ShellyButton1()
 
+@app.route('/get-status', methods=['GET'])
+def status():
+    try:
+        kickoff = request.args.get('kickoff', False)
+
+        result = shelly.status(kickoff)
+
+        if result:
+            return jsonify({"status": "OK", "shelly-response": json.loads(result)}), 200
+
+        return jsonify({"error": True, "message": "Failed to get status"}), 500
+
+    except Exception as e:
+        return jsonify({"error": True, "message": str(e)}), 500
+
 @app.route('/set-wifi-client-mode', methods=['POST'])
 def set_wifi_client_mode():
     try:

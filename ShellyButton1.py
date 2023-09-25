@@ -39,9 +39,9 @@ class ShellyButton1:
 
         return url
 
-    def status(self):
+    def status(self, kickoff=False):
         try:
-            response = requests.get(self.create_url(END_POINTS["status"]))
+            response = requests.get(self.create_url(END_POINTS["status"], kickoff))
         except Exception as e:
             print('status API error:', datetime.now().strftime("%m/%d/%Y, %H:%M:%S"))
             return {"error": True, "exception": e}
