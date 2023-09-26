@@ -9,8 +9,9 @@ shelly = ShellyButton1()
 def status():
     try:
         kickoff = request.args.get('kickoff', False)
+        ip_address = request.args.get('ip_address', None)
 
-        result = shelly.status(kickoff)
+        result = shelly.status(kickoff, ip_address)
 
         if result:
             return jsonify({"status": "OK", "shelly-response": json.loads(result)}), 200
@@ -23,6 +24,9 @@ def status():
 @app.route('/set-wifi-client-mode', methods=['POST'])
 def set_wifi_client_mode():
     try:
+        kickoff = request.args.get('kickoff', False)
+        ip_address = request.args.get('ip_address', None)
+
         data = request.json
 
         ssid = data.get('ssid')
@@ -32,9 +36,8 @@ def set_wifi_client_mode():
         netmask = data.get('netmask')
         gateway = data.get('gateway')
         dns = data.get('dns')
-        kickoff = data.get('kickoff', False)
 
-        result = shelly.set_wifi_client_mode(ssid, key, ipv4_method, ip, netmask, gateway, dns, kickoff)
+        result = shelly.set_wifi_client_mode(ssid, key, ipv4_method, ip, netmask, gateway, dns, kickoff, ip_address)
 
         if result:
             return jsonify({"status": "OK", "message": "WiFi client mode is now on", "shelly-response": json.loads(result)}), 200

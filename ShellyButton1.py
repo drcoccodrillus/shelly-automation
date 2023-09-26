@@ -2,6 +2,7 @@
 
 import requests
 import json
+import re
 
 from datetime import datetime
 
@@ -27,9 +28,15 @@ class ShellyButton1:
         self.url3 = url3
         self.url4 = url4
 
-    def create_url(self, endpoint, kickoff=False, params=None):
+    def create_url(self, endpoint, kickoff=False, ip_address=None, params=None):
         if kickoff:
             url = f'{BASE_URL}{DEFAULT_IP_ADDRESS}{endpoint}'
+        elif ip_address:
+            pattern = re.compile("^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$")
+            if pattern.match(ip_address):
+                url = f'{BASE_URL}{ip_address}{endpoint}'
+            else:
+                url = f'{BASE_URL}{DEFAULT_IP_ADDRESS}{endpoint}'
         else:
             url = f'{BASE_URL}{IP_ADDRESS}{endpoint}'
 
@@ -39,9 +46,9 @@ class ShellyButton1:
 
         return url
 
-    def status(self, kickoff=False):
+    def status(self, kickoff=False, ip_address=None):
         try:
-            response = requests.get(self.create_url(END_POINTS["status"], kickoff))
+            response = requests.get(self.create_url(END_POINTS["status"], kickoff, ip_address))
         except Exception as e:
             print('status API error:', datetime.now().strftime("%m/%d/%Y, %H:%M:%S"))
             return {"error": True, "exception": e}
@@ -83,7 +90,7 @@ class ShellyButton1:
 
         return False
 
-    def set_wifi_client_mode(self, ssid, key, ipv4_method, ip, netmask, gateway, dns, kickoff=False):
+    def set_wifi_client_mode(self, ssid, key, ipv4_method, ip, netmask, gateway, dns, kickoff=False, ip_address=None):
         params = {
             "enabled": "1",
             "ssid": ssid,
@@ -95,7 +102,7 @@ class ShellyButton1:
             "dns": dns
         }
         try:
-            response = requests.get(self.create_url(END_POINTS["wifi"], kickoff, params=params))
+            response = requests.get(self.create_url(END_POINTS["wifi"], kickoff, ip_address, params=params))
         except Exception as e:
             print("set_wifi_client_mode API error:", datetime.now().strftime("%m/%d/%Y, %H:%M:%S"))
             return {"error": True, "message": e}
