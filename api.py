@@ -41,6 +41,26 @@ def set_device_name():
     except Exception as e:
         return jsonify({"error": True, "message": str(e)}), 500
 
+@app.route('/set-wifi-access-point-mode', methods=['POST'])
+def set_wifi_access_point_mode():
+    try:
+        kickoff = request.args.get('kickoff', False)
+        ip_address = request.args.get('ip_address', None)
+
+        data = request.json
+
+        key = data.get('key')
+
+        result = shelly.set_wifi_access_point_mode(key, kickoff, ip_address)
+
+        if result:
+            return jsonify({"status": "OK", "message": "Access point mode is now on", "shelly-response": json.loads(result)}), 200
+
+        return jsonify({"error": True, "message": "Failed to enable access point mode"}), 500
+
+    except Exception as e:
+        return jsonify({"error": True, "message": str(e)}), 500
+
 @app.route('/set-wifi-client-mode', methods=['POST'])
 def set_wifi_client_mode():
     try:

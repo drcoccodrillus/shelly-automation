@@ -73,13 +73,13 @@ class ShellyButton1:
 
         return False
 
-    def enable_acess_point_mode(self):
+    def set_wifi_access_point_mode(self, key, kickoff=False, ip_address=None):
         params = {
             "enabled": "1",
-            "key": ""
+            "key": key
         }
         try:
-            response = requests.get(self.create_url(END_POINTS["access-point"], params=params))
+            response = requests.get(self.create_url(END_POINTS["access-point"], kickoff, ip_address, params=params))
         except Exception as e:
             print("enable_acess_point_mode API error:", datetime.now().strftime("%m/%d/%Y, %H:%M:%S"))
             return {"error": True, "message": e}
