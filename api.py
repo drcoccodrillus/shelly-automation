@@ -21,6 +21,26 @@ def status():
     except Exception as e:
         return jsonify({"error": True, "message": str(e)}), 500
 
+@app.route('/set-device-name', methods=['POST'])
+def set_device_name():
+    try:
+        kickoff = request.args.get('kickoff', False)
+        ip_address = request.args.get('ip_address', None)
+
+        data = request.json
+
+        device_name = data.get('device_name')
+
+        result = shelly.set_device_name(device_name, kickoff, ip_address)
+
+        if result:
+            return jsonify({"status": "OK", "message": "Device name is now set", "shelly-response": json.loads(result)}), 200
+
+        return jsonify({"error": True, "message": "Failed to set device name"}), 500
+
+    except Exception as e:
+        return jsonify({"error": True, "message": str(e)}), 500
+
 @app.route('/set-wifi-client-mode', methods=['POST'])
 def set_wifi_client_mode():
     try:

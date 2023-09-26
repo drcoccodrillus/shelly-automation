@@ -59,10 +59,10 @@ class ShellyButton1:
 
         return False
 
-    def set_device_name(self, device_name):
+    def set_device_name(self, device_name, kickoff=False, ip_address=None):
         try:
-            payload = {"name": device_name}
-            response = requests.post(self.create_url(END_POINTS["base"], json=payload))
+            raw_data = f"name={device_name}"
+            response = requests.post(self.create_url(END_POINTS["base"], kickoff, ip_address), data=raw_data)
         except Exception as e:
             print('set_device_name API error:', datetime.now().strftime("%m/%d/%Y, %H:%M:%S"))
             return {"error": True, "exception": e}
