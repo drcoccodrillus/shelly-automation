@@ -135,12 +135,12 @@ class ShellyButton1:
 
         return False
 
-    def enable_timezone(self):
+    def set_automatic_timezone(self, kickoff=False, ip_address=None):
         params = {
             "tzautodetect": "true"
         }
         try:
-            response = requests.get(self.create_url(END_POINTS["base"], params=params))
+            response = requests.get(self.create_url(END_POINTS["base"], kickoff, ip_address, params=params))
         except Exception as e:
             print('enable_timezone API error:', datetime.now().strftime("%m/%d/%Y, %H:%M:%S"))
             return {"error": True, "exception": e}

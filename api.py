@@ -108,5 +108,21 @@ def set_custom_timezone():
     except Exception as e:
         return jsonify({"error": True, "message": str(e)}), 500
 
+@app.route('/set-automatic-timezone', methods=['POST'])
+def set_automatic_timezone():
+    try:
+        kickoff = request.args.get('kickoff', False)
+        ip_address = request.args.get('ip_address', None)
+
+        result = shelly.set_automatic_timezone(kickoff, ip_address)
+
+        if result:
+            return jsonify({"status": "OK", "message": "Automatic timezone is now set", "shelly-response": json.loads(result)}), 200
+
+        return jsonify({"error": True, "message": "Failed to set automatic timezone"}), 500
+
+    except Exception as e:
+        return jsonify({"error": True, "message": str(e)}), 500
+
 if __name__ == '__main__':
     app.run(debug=True, port=5080)
