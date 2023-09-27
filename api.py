@@ -156,5 +156,23 @@ def enable_led_status():
     except Exception as e:
         return jsonify({"error": True, "message": str(e)}), 500
 
+@app.route('/set-longpush-duration', methods=['POST'])
+def set_longpush_duration():
+    try:
+        kickoff = request.args.get('kickoff', False)
+        ip_address = request.args.get('ip_address', None)
+
+        data = request.json
+
+        longpush_duration_ms_max = data.get('longpush_duration_ms_max')
+
+        result = shelly.set_longpush_duration(longpush_duration_ms_max, kickoff, ip_address)
+
+        if result:
+            return jsonify({"status": "OK", "message": "Longpush duration is now set", "shelly-response": json.loads(result)}), 200
+
+    except Exception as e:
+        return jsonify({"error": True, "message": str(e)}), 500
+
 if __name__ == '__main__':
     app.run(debug=True, port=5080)

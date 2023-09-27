@@ -183,10 +183,10 @@ class ShellyButton1:
 
         return False
 
-    def set_longpush_duration(self, longpush_duration_ms_max):
+    def set_longpush_duration(self, longpush_duration_ms_max, kickoff=False, ip_address=None):
         try:
-            payload = {"longpush_duration_ms_max": longpush_duration_ms_max}
-            response = requests.post(END_POINTS["base"], json=payload)
+            raw_data = f"longpush_duration_ms_max={longpush_duration_ms_max}"
+            response = requests.post(self.create_url(END_POINTS["base"], kickoff, ip_address), data=raw_data)
         except Exception as e:
             print('set_long_push_duration API error:', datetime.now().strftime("%m/%d/%Y, %H:%M:%S"))
             return {"error": True, "exception": e}
