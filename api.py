@@ -87,5 +87,26 @@ def set_wifi_client_mode():
     except Exception as e:
         return jsonify({"error": True, "message": str(e)}), 500
 
+@app.route('/set-custom-timezone', methods=['POST'])
+def set_custom_timezone():
+    try:
+        kickoff = request.args.get('kickoff', False)
+        ip_address = request.args.get('ip_address', None)
+
+        data = request.json
+
+        timezone = data.get('timezone')
+        utc_offset = data.get('utc_offset')
+
+        result = shelly.set_custom_timezone(timezone, utc_offset, kickoff, ip_address)
+
+        if result:
+            return jsonify({"status": "OK", "message": "Custom timezone is now set", "shelly-response": json.loads(result)}), 200
+
+        return jsonify({"error": True, "message": "Failed to set custom timezone"}), 500
+
+    except Exception as e:
+        return jsonify({"error": True, "message": str(e)}), 500
+
 if __name__ == '__main__':
     app.run(debug=True, port=5080)

@@ -113,23 +113,23 @@ class ShellyButton1:
 
         return False
 
-    def disable_timezone(self):
+    def set_custom_timezone(self, timezone, utc_offset, kickoff=False, ip_address=None):
         params = {
             "tzautodetect": "false",
-            "timezone": "UTC",
-            "tz_utc_offset": "0",
+            "timezone": timezone,
+            "tz_utc_offset": utc_offset,
             "lat": "500",
             "lng": "500",
             "tz_dst_auto": "1"
         }
         try:
-            response = requests.get(self.create_url_first_setup(END_POINTS["base"], params=params))
+            response = requests.get(self.create_url(END_POINTS["base"], kickoff, ip_address, params=params))
         except Exception as e:
-            print('disable_timezone API error:', datetime.now().strftime("%m/%d/%Y, %H:%M:%S"))
+            print('set_custom_timezone API error:', datetime.now().strftime("%m/%d/%Y, %H:%M:%S"))
             return {"error": True, "exception": e}
 
         if response.status_code == 200:
-            print("disable_timezone result:")
+            print("set_custom_timezone result:")
             json_object = json.loads(response.text)
             return json.dumps(json_object, indent=2)
 
