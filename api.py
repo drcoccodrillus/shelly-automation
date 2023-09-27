@@ -124,5 +124,37 @@ def set_automatic_timezone():
     except Exception as e:
         return jsonify({"error": True, "message": str(e)}), 500
 
+@app.route('/disable-led-status', methods=['POST'])
+def disable_led_status():
+    try:
+        kickoff = request.args.get('kickoff', False)
+        ip_address = request.args.get('ip_address', None)
+
+        result = shelly.disable_led_status(kickoff, ip_address)
+
+        if result:
+            return jsonify({"status": "OK", "message": "LED status is now disabled", "shelly-response": json.loads(result)}), 200
+
+        return jsonify({"error": True, "message": "Failed to disable LED status"}), 500
+
+    except Exception as e:
+        return jsonify({"error": True, "message": str(e)}), 500
+
+@app.route('/enable-led-status', methods=['POST'])
+def enable_led_status():
+    try:
+        kickoff = request.args.get('kickoff', False)
+        ip_address = request.args.get('ip_address', None)
+
+        result = shelly.enable_led_status(kickoff, ip_address)
+
+        if result:
+            return jsonify({"status": "OK", "message": "LED status is now enabled", "shelly-response": json.loads(result)}), 200
+
+        return jsonify({"error": True, "message": "Failed to enable LED status"}), 500
+
+    except Exception as e:
+        return jsonify({"error": True, "message": str(e)}), 500
+
 if __name__ == '__main__':
     app.run(debug=True, port=5080)

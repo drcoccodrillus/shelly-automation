@@ -151,12 +151,12 @@ class ShellyButton1:
 
         return False
 
-    def disable_led_status(self):
+    def disable_led_status(self, kickoff=False, ip_address=None):
         try:
             params = {
                 "led_status_disable": "true"
             }
-            response = requests.post(END_POINTS["base"], params=params)
+            response = requests.post(self.create_url(END_POINTS["base"], kickoff, ip_address, params=params))
         except Exception as e:
             print('disable_led_status API error:', datetime.now().strftime("%m/%d/%Y, %H:%M:%S"))
             return {"error": True, "exception": e}
@@ -167,12 +167,12 @@ class ShellyButton1:
 
         return False
 
-    def enable_led_status(self):
+    def enable_led_status(self, kickoff=False, ip_address=None):
         try:
             params = {
                 "led_status_disable": "false"
             }
-            response = requests.post(END_POINTS["base"], params=params)
+            response = requests.post(self.create_url(END_POINTS["base"], kickoff, ip_address, params=params))
         except Exception as e:
             print('enable_led_status API error:', datetime.now().strftime("%m/%d/%Y, %H:%M:%S"))
             return {"error": True, "exception": e}
