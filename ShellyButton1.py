@@ -301,3 +301,29 @@ class ShellyButton1:
             return json.dumps(json_object, indent=2)
 
         return False
+
+    def set_shortpush_url(self, urls, kickoff=False, ip_address=None):
+        #http://192.168.10.187/settings/actions/?index=0&enabled=true&name=shortpush_url&urls[]=http://localhost/target1&urls[]=http://localhost/target2
+        # This API uses curl instead of requests because the requests library does not handle the "urls[]" parameter as expected by the Shelly API
+        # The requests library encodes the "urls[]" parameter as "urls%5B%5D" which is not accepted by the Shelly API
+        try:
+            params = {
+                "index": "0",
+                "enabled": "true",
+                "name": "shortpush_url",
+                "urls": urls
+            }
+            curl_command = ["curl", "-s", "-w", "%{http_code}", self.create_url(END_POINTS["actions"], kickoff, ip_address, params=params)]
+            response = subprocess.check_output(curl_command, stderr=subprocess.STDOUT, text=True)
+            response_body = response[:-3]       # Extract the response body
+            response_code = int(response[-3:])  # Extract the HTTP status code
+            print(response[-3:])
+        except subprocess.CalledProcessError as e:
+            print(f"Request failed with error: {e.returncode}")
+            print(e.output)
+
+        if response_code == 200:
+            json_object = json.loads(response_body)
+            return json.dumps(json_object, indent=2)
+
+        return False

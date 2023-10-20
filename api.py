@@ -258,5 +258,25 @@ def disable_shortpush():
     except Exception as e:
         return jsonify({"error": True, "message": str(e)}), 500
 
+@app.route('/set-shortpush-url', methods=['POST'])
+def set_shortpush_url():
+    try:
+        kickoff = request.args.get('kickoff', False)
+        ip_address = request.args.get('ip_address', None)
+
+        data = request.json
+
+        urls = data.get('urls')
+
+        result = shelly.set_shortpush_url(urls, kickoff, ip_address)
+
+        if result:
+            return jsonify({"status": "OK", "message": "Shortpush URL is now set", "shelly-response": json.loads(result)}), 200
+
+        return jsonify({"error": True, "message": "Failed to set shortpush URL"}), 500
+
+    except Exception as e:
+        return jsonify({"error": True, "message": str(e)}), 500
+
 if __name__ == '__main__':
     app.run(debug=True, port=5080)
