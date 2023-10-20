@@ -43,8 +43,8 @@ class ShellyButton1:
 
         if params:
             param_string = "&".join([f"{key}={value}" for key, value in params.items() if key != "urls"])
-            urls = "&".join([f"urls[]={url}" for url in params["urls"] if len(params["urls"]) > 0 and len(params["urls"]) < 6 and isinstance(params["urls"], list)])
-            param_string = f"{param_string}&{urls}"
+            urls = "&".join([f"urls[]={url}" for url in params["urls"] if len(params["urls"]) > 0 and len(params["urls"]) < 6 and isinstance(params["urls"], list)]) if "urls" in params else ""
+            param_string = f"{param_string}&{urls}" if urls else param_string
             url = f"{url}?{param_string}"
 
         return url
