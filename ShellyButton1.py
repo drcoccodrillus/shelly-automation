@@ -197,7 +197,7 @@ class ShellyButton1:
 
         return False
 
-    def enable_longpush_url(self):
+    def enable_longpush(self, kickoff=False, ip_address=None):
         #http://192.168.10.100/settings/actions/?index=0&enabled=true&name=longpush_url
         try:
             params = {
@@ -205,7 +205,7 @@ class ShellyButton1:
                 "enabled": "true",
                 "name": "longpush_url"
             }
-            response = requests.get(self.create_url(END_POINTS["actions"], params=params))
+            response = requests.get(self.create_url(END_POINTS["actions"], kickoff, ip_address, params=params))
         except Exception as e:
             print('enable_longpush_url API error:', datetime.now().strftime("%m/%d/%Y, %H:%M:%S"))
             return {"error": True, "exception": e}
@@ -216,7 +216,7 @@ class ShellyButton1:
 
         return False
 
-    def disable_longpush_url(self):
+    def disable_longpush(self, kickoff=False, ip_address=None):
         #http://192.168.10.100/settings/actions/?index=0&enabled=false&name=longpush_url
         try:
             params = {
@@ -224,7 +224,7 @@ class ShellyButton1:
                 "enabled": "false",
                 "name": "longpush_url"
             }
-            response = requests.get(self.create_url(END_POINTS["actions"], params=params))
+            response = requests.get(self.create_url(END_POINTS["actions"], kickoff, ip_address, params=params))
         except Exception as e:
             print('disable_longpush_url API error:', datetime.now().strftime("%m/%d/%Y, %H:%M:%S"))
             return {"error": True, "exception": e}

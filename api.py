@@ -174,5 +174,37 @@ def set_longpush_duration():
     except Exception as e:
         return jsonify({"error": True, "message": str(e)}), 500
 
+@app.route('/enable-longpush', methods=['POST'])
+def enable_longpush():
+    try:
+        kickoff = request.args.get('kickoff', False)
+        ip_address = request.args.get('ip_address', None)
+
+        result = shelly.enable_longpush(kickoff, ip_address)
+
+        if result:
+            return jsonify({"status": "OK", "message": "Longpush is now enabled", "shelly-response": json.loads(result)}), 200
+
+        return jsonify({"error": True, "message": "Failed to enable longpush"}), 500
+
+    except Exception as e:
+        return jsonify({"error": True, "message": str(e)}), 500
+
+@app.route('/disable-longpush', methods=['POST'])
+def disable_longpush():
+    try:
+        kickoff = request.args.get('kickoff', False)
+        ip_address = request.args.get('ip_address', None)
+
+        result = shelly.disable_longpush(kickoff, ip_address)
+
+        if result:
+            return jsonify({"status": "OK", "message": "Longpush is now disabled", "shelly-response": json.loads(result)}), 200
+
+        return jsonify({"error": True, "message": "Failed to disable longpush"}), 500
+
+    except Exception as e:
+        return jsonify({"error": True, "message": str(e)}), 500
+
 if __name__ == '__main__':
     app.run(debug=True, port=5080)
