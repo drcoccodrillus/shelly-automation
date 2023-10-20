@@ -226,5 +226,37 @@ def set_longpush_url():
     except Exception as e:
         return jsonify({"error": True, "message": str(e)}), 500
 
+@app.route('/enable-shortpush', methods=['POST'])
+def enable_shortpush():
+    try:
+        kickoff = request.args.get('kickoff', False)
+        ip_address = request.args.get('ip_address', None)
+
+        result = shelly.enable_shortpush(kickoff, ip_address)
+
+        if result:
+            return jsonify({"status": "OK", "message": "Shortpush is now enabled", "shelly-response": json.loads(result)}), 200
+
+        return jsonify({"error": True, "message": "Failed to enable shortpush"}), 500
+
+    except Exception as e:
+        return jsonify({"error": True, "message": str(e)}), 500
+
+@app.route('/disable-shortpush', methods=['POST'])
+def disable_shortpush():
+    try:
+        kickoff = request.args.get('kickoff', False)
+        ip_address = request.args.get('ip_address', None)
+
+        result = shelly.disable_shortpush(kickoff, ip_address)
+
+        if result:
+            return jsonify({"status": "OK", "message": "Shortpush is now disabled", "shelly-response": json.loads(result)}), 200
+
+        return jsonify({"error": True, "message": "Failed to disable shortpush"}), 500
+
+    except Exception as e:
+        return jsonify({"error": True, "message": str(e)}), 500
+
 if __name__ == '__main__':
     app.run(debug=True, port=5080)

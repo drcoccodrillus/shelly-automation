@@ -238,7 +238,7 @@ class ShellyButton1:
 
         return False
 
-def set_longpush_url(self, urls, kickoff=False, ip_address=None):
+    def set_longpush_url(self, urls, kickoff=False, ip_address=None):
         #http://192.168.10.100/settings/actions/?index=0&enabled=true&name=longpush_url&urls[]=http://localhost/target1&urls[]=http://localhost/target2
         # This API uses curl instead of requests because the requests library does not handle the "urls[]" parameter as expected by the Shelly API
         # The requests library encodes the "urls[]" parameter as "urls%5B%5D" which is not accepted by the Shelly API
@@ -260,6 +260,44 @@ def set_longpush_url(self, urls, kickoff=False, ip_address=None):
 
         if response_code == 200:
             json_object = json.loads(response_body)
+            return json.dumps(json_object, indent=2)
+
+        return False
+
+    def enable_shortpush(self, kickoff=False, ip_address=None):
+        #http://192.168.10.100/settings/actions/?index=0&enabled=true&name=shortpush_url
+        try:
+            params = {
+                "index": "0",
+                "enabled": "true",
+                "name": "shortpush_url"
+            }
+            response = requests.get(self.create_url(END_POINTS["actions"], kickoff, ip_address, params=params))
+        except Exception as e:
+            print('enable_shortpush API error:', datetime.now().strftime("%m/%d/%Y, %H:%M:%S"))
+            return {"error": True, "exception": e}
+
+        if response.status_code == 200:
+            json_object = json.loads(response.text)
+            return json.dumps(json_object, indent=2)
+
+        return False
+
+    def disable_shortpush(self, kickoff=False, ip_address=None):
+        #http://192.168.10.100/settings/actions/?index=0&enabled=false&name=shortpush_url
+        try:
+            params = {
+                "index": "0",
+                "enabled": "false",
+                "name": "shortpush_url"
+            }
+            response = requests.get(self.create_url(END_POINTS["actions"], kickoff, ip_address, params=params))
+        except Exception as e:
+            print('disable_shortpush API error:', datetime.now().strftime("%m/%d/%Y, %H:%M:%S"))
+            return {"error": True, "exception": e}
+
+        if response.status_code == 200:
+            json_object = json.loads(response.text)
             return json.dumps(json_object, indent=2)
 
         return False
