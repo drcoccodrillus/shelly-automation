@@ -192,6 +192,22 @@ def set_multipush():
     except Exception as e:
         return jsonify({"error": True, "message": str(e)}), 500
 
+@app.route('/reboot', methods=['POST'])
+def reboot():
+    try:
+        kickoff = request.args.get('kickoff', False)
+        ip_address = request.args.get('ip_address', None)
+
+        result = shelly.reboot(kickoff, ip_address)
+
+        if result:
+            return jsonify({"status": "OK", "message": "Rebooting...", "shelly-response": json.loads(result)}), 200
+
+        return jsonify({"error": True, "message": "Failed to reboot"}), 500
+
+    except Exception as e:
+        return jsonify({"error": True, "message": str(e)}), 500
+
 @app.route('/enable-longpush', methods=['POST'])
 def enable_longpush():
     try:

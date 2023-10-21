@@ -214,6 +214,19 @@ class ShellyButton1:
 
         return False
 
+    def reboot(self, kickoff=False, ip_address=None):
+        try:
+            response = requests.get(self.create_url(END_POINTS["reboot"], kickoff, ip_address))
+        except Exception as e:
+            print('reboot API error:', datetime.now().strftime("%m/%d/%Y, %H:%M:%S"))
+            return {"error": True, "message": e}
+
+        if response.status_code == 200:
+            json_object = json.loads(response.text)
+            return json.dumps(json_object, indent=2)
+
+        return False
+
     def enable_longpush(self, kickoff=False, ip_address=None):
         #http://192.168.10.100/settings/actions/?index=0&enabled=true&name=longpush_url
         try:
