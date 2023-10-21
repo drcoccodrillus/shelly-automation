@@ -174,6 +174,24 @@ def set_longpush_duration():
     except Exception as e:
         return jsonify({"error": True, "message": str(e)}), 500
 
+@app.route('/set-multipush', methods=['POST'])
+def set_multipush():
+    try:
+        kickoff = request.args.get('kickoff', False)
+        ip_address = request.args.get('ip_address', None)
+
+        data = request.json
+
+        multipush_ms_max = data.get('multipush_time_between_pushes_ms_max')
+
+        result = shelly.set_multipush(multipush_ms_max, kickoff, ip_address)
+
+        if result:
+            return jsonify({"status": "OK", "message": "Multipush is now set", "shelly-response": json.loads(result)}), 200
+
+    except Exception as e:
+        return jsonify({"error": True, "message": str(e)}), 500
+
 @app.route('/enable-longpush', methods=['POST'])
 def enable_longpush():
     try:

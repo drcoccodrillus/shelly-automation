@@ -200,6 +200,20 @@ class ShellyButton1:
 
         return False
 
+    def set_multipush(self, multipush_ms_max, kickoff=False, ip_address=None):
+        try:
+            raw_data = f"multipush_time_between_pushes_ms_max={multipush_ms_max}"
+            response = requests.post(self.create_url(END_POINTS["base"], kickoff, ip_address), data=raw_data)
+        except Exception as e:
+            print('set_multipush API error:', datetime.now().strftime("%m/%d/%Y, %H:%M:%S"))
+            return {"error": True, "exception": e}
+
+        if response.status_code == 200:
+            json_object = json.loads(response.text)
+            return json.dumps(json_object, indent=2)
+
+        return False
+
     def enable_longpush(self, kickoff=False, ip_address=None):
         #http://192.168.10.100/settings/actions/?index=0&enabled=true&name=longpush_url
         try:
