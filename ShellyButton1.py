@@ -19,7 +19,8 @@ END_POINTS = {
     "base": "/settings",
     "access-point": "/settings/ap",
     "wifi": "/settings/sta",
-    "actions": "/settings/actions"
+    "actions": "/settings/actions",
+    "reboot": "/reboot"
 }
 
 class ShellyButton1:
