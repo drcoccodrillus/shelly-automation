@@ -20,7 +20,8 @@ END_POINTS = {
     "access-point": "/settings/ap",
     "wifi": "/settings/sta",
     "actions": "/settings/actions",
-    "reboot": "/reboot"
+    "reboot": "/reboot",
+    "check-for-update": "/ota/check"
 }
 
 class ShellyButton1:
@@ -208,6 +209,19 @@ class ShellyButton1:
         except Exception as e:
             print('set_multipush API error:', datetime.now().strftime("%m/%d/%Y, %H:%M:%S"))
             return {"error": True, "exception": e}
+
+        if response.status_code == 200:
+            json_object = json.loads(response.text)
+            return json.dumps(json_object, indent=2)
+
+        return False
+
+    def check_firmware_update(self, kickoff=False, ip_address=None):
+        try:
+            response = requests.get(self.create_url(END_POINTS["check-for-update"], kickoff, ip_address))
+        except Exception as e:
+            print('check_for_update API error:', datetime.now().strftime("%m/%d/%Y, %H:%M:%S"))
+            return {"error": True, "message": e}
 
         if response.status_code == 200:
             json_object = json.loads(response.text)
