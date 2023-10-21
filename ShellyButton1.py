@@ -21,7 +21,8 @@ END_POINTS = {
     "wifi": "/settings/sta",
     "actions": "/settings/actions",
     "reboot": "/reboot",
-    "check-for-update": "/ota/check"
+    "check-for-update": "/ota/check",
+    "perform-update": "/ota"
 }
 
 class ShellyButton1:
@@ -227,6 +228,21 @@ class ShellyButton1:
             json_object = json.loads(response.text)
             return json.dumps(json_object, indent=2)
 
+        return False
+
+    def perform_firmware_update(self, kickoff=False, ip_address=None):
+        try:
+            params = {
+                "update": "1"
+            }
+            response = requests.get(self.create_url(END_POINTS["perform-update"], kickoff, ip_address, params=params))
+        except Exception as e:
+            print('update_firmware API error:', datetime.now().strftime("%m/%d/%Y, %H:%M:%S"))
+            return {"error": True, "message": e}
+
+        if response.status_code == 200:
+            json_object = json.loads(response.text)
+            return json.dumps(json_object, indent=2)
         return False
 
     def reboot(self, kickoff=False, ip_address=None):

@@ -208,6 +208,22 @@ def check_firmware_update():
     except Exception as e:
         return jsonify({"error": True, "message": str(e)}), 500
 
+@app.route('/perform-firmware-update', methods=['GET'])
+def perform_firmware_update():
+    try:
+        kickoff = request.args.get('kickoff', False)
+        ip_address = request.args.get('ip_address', None)
+
+        result = shelly.perform_firmware_update(kickoff, ip_address)
+
+        if result:
+            return jsonify({"status": "OK", "message": "Updating firmware", "shelly-response": json.loads(result)}), 200
+
+        return jsonify({"error": True, "message": "Failed to update firmware"}), 500
+
+    except Exception as e:
+        return jsonify({"error": True, "message": str(e)}), 500
+
 @app.route('/reboot', methods=['POST'])
 def reboot():
     try:
